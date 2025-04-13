@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state (when typing) -->
+    <item android:state_focused="true" android:color="@android:color/holo_blue_dark"/> <!-- Blue when focused -->
+    <!-- Error state -->
+    <item android:state_enabled="false" android:color="@android:color/holo_red_dark"/> <!-- Red for error -->
+    <!-- Default state (unfocused) -->
+    <item android:color="@android:color/darker_gray"/> <!-- Gray when unfocused -->
+</selector>

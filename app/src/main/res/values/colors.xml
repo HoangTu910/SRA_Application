@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="packets_rejected">#B9E5E8</color>
+    <color name="safe_counter">#7AB2D3</color>
+    <color name="brute_force">#4A628A</color>
+    <color name="pdr_color">#4A628A</color>
+    <color name="latency_color">#7AB2D3</color>
+    <color name="packets_color">#B9E5E8</color>
+</resources>
