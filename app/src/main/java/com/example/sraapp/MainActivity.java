@@ -1,35 +1,44 @@
 package com.example.sraapp;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.content.Intent;
-
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private DashboardFragment dashboardFragment;
+    private DeviceFragment deviceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         setContentView(R.layout.activity_main);
 
-        Button connectButton = findViewById(R.id.connect_button);
+        dashboardFragment = new DashboardFragment();
+        deviceFragment = new DeviceFragment();
 
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent dashboardIntent = new Intent(MainActivity.this, DashboardActivity.class);
-                startActivity(dashboardIntent);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setOnItemSelectedListener(item -> {
+            Fragment fragment;
+            if (item.getItemId() == R.id.navigation_dashboard) {
+                fragment = dashboardFragment;
+            } else if (item.getItemId() == R.id.navigation_device) {
+                fragment = deviceFragment;
+            } else {
+                return false;
             }
+
+            getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+            return true;
         });
+
+        // Set default fragment
+        getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.fragment_container, dashboardFragment)
+            .commit();
     }
 }

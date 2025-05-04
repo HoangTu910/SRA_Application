@@ -1,5 +1,6 @@
 package com.example.sraapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
             public <T extends ViewModel> T create(Class<T> modelClass) {
                 DashboardRepository repository = new DashboardRepository(
                         true,
-                        "http://192.168.1.24:7979/api/devices/"
+                        "http://192.168.1.6:7979/api/devices/"
                 );
                 return (T) new DashboardViewModel(repository);
             }
@@ -60,6 +62,7 @@ public class DashboardActivity extends AppCompatActivity {
         TextView pdrText = findViewById(R.id.pdr_value);
         TextView averageLatencyText = findViewById(R.id.average_latency_value);
         TextView averagePacketsText = findViewById(R.id.average_packets_value);
+        TextView pdrLargeText = findViewById(R.id.pdrLargeText);
 
         LineChart pdrChart = findViewById(R.id.PDRLineChart);
         LineChart latencyChart = findViewById(R.id.avgLatencyLineChart);
@@ -72,10 +75,12 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         viewModel.getPerformanceMetrics().observe(this, performanceMetrics -> {
-            String pdr = String.valueOf(performanceMetrics.getPDR()) + "%";
-            String averageLatency = String.valueOf(performanceMetrics.getAverageLatency()) + " ms";
+            String pdr = performanceMetrics.getPDR() + "%";
+            String averageLatency = performanceMetrics.getAverageLatency() + " ms";
             String averagePackets = String.valueOf(performanceMetrics.getAveragePackets());
             pdrText.setText(pdr);
+            String pdrLargeTextStr = performanceMetrics.getPDR() + " Percent";
+            pdrLargeText.setText(pdrLargeTextStr);
             averageLatencyText.setText(averageLatency);
             averagePacketsText.setText(averagePackets);
         });
@@ -111,6 +116,19 @@ public class DashboardActivity extends AppCompatActivity {
         viewModel.getPacketsEntries().observe(this, entries -> {
             updateLineChart(packetsChart, entries, "Packets",
                     ContextCompat.getColor(this, R.color.packets_color));
+        });
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setSelectedItemId(R.id.navigation_dashboard);
+        
+        navView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.navigation_device) {
+                startActivity(new Intent(this, DeviceActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
         });
     }
 
